@@ -30,6 +30,9 @@ class PlatformToolsPlugin {
         // no-op
         break;
 
+      case 'request_tracking_authorization':
+        return 4;
+
       case 'info':
         return getInfo();
 

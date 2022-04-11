@@ -25,6 +25,9 @@ public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
         case "badge_update":
             updateBadge(badge: call.arguments as! Int)
             
+        case "request_tracking_authorization":
+            requestTrackingAuthorization(result: result)
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -34,6 +37,24 @@ public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
         if isSupportedBadge {
             UIApplication.shared.applicationIconBadgeNumber = badge
         }
+    }
+
+    /*
+    case notDetermined = 0
+    case restricted = 1
+    case denied = 2
+    case authorized = 3
+    case notSupported = 4
+    */
+    private func requestTrackingAuthorization(result: @escaping FlutterResult) {
+      if #available(iOS 14, *) {
+          ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
+              result(Int(status.rawValue))
+          })
+      } else {
+          // return notSupported
+          result(Int(4))
+      }
     }
     
     private func getInfo(result: FlutterResult) {

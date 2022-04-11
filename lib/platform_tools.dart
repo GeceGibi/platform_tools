@@ -3,6 +3,14 @@ import 'package:flutter/services.dart';
 
 part 'platform_tools_model.dart';
 
+enum TrackingRequestReponse {
+  notDetermined,
+  restricted,
+  denied,
+  authorized,
+  notSupported
+}
+
 class PlatformTools {
   static const _channel = MethodChannel('gecegibi/platform_tools');
 
@@ -25,5 +33,35 @@ class PlatformTools {
 
   static void badgeUpdate(int value) {
     _channel.invokeMethod('badge_update', value);
+  }
+
+  Future<TrackingRequestReponse> requestTrackingAuthorization() async {
+    try {
+      //? notDetermined = 0
+      //? restricted = 1
+      //? denied = 2
+      //? authorized = 3
+      //? notSupported = 4
+
+      switch (await _channel.invokeMethod('request_tracking_authorization')) {
+        case 1:
+          return TrackingRequestReponse.restricted;
+
+        case 2:
+          return TrackingRequestReponse.denied;
+
+        case 3:
+          return TrackingRequestReponse.authorized;
+
+        case 4:
+          return TrackingRequestReponse.notSupported;
+
+        case 0:
+        default:
+          return TrackingRequestReponse.notDetermined;
+      }
+    } catch (e) {
+      return TrackingRequestReponse.notDetermined;
+    }
   }
 }

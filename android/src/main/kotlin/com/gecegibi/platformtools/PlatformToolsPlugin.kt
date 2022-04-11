@@ -58,6 +58,7 @@ class PlatformToolsPlugin: FlutterPlugin, MethodCallHandler,ActivityAware {
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     when (call.method) {
+      "request_tracking_authorization" -> result.success(4)
       "app_settings" -> openAppSettings()
       "app_notification_settings" -> openAppNotificationSettings()
       "badge_update" -> updateBadge(call.arguments as Int)
