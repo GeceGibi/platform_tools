@@ -7,7 +7,7 @@ import 'dart:html' as html show window, Navigator;
 
 import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:platformtools/platform_tools.dart' show PlatformToolsInfo;
+import 'package:platform_tools/platform_tools.dart' show PlatformToolsInfo;
 
 /// A web implementation of the Platformtools plugin.
 class PlatformToolsPlugin {
