@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
-import 'package:platformtools/platform_tools_model.dart';
+
+part 'platform_tools_model.dart';
 
 class PlatformTools {
   static const _channel = MethodChannel('gecegibi/platform_tools');

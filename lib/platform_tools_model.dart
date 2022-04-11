@@ -1,3 +1,5 @@
+part of 'platform_tools.dart';
+
 class PlatformToolsInfo {
   PlatformToolsInfo.fallback({
     this.appVersion = '-',
@@ -13,22 +15,24 @@ class PlatformToolsInfo {
     this.isMIUI = false,
     this.isGMS = false,
     this.isHMS = false,
-  });
+  }) : _json = const {};
 
-  PlatformToolsInfo.fromJson(Map<String, dynamic> json)
-      : appVersion = json['app_version'],
-        appBundle = json['app_bundle'],
-        appBuild = json['app_build'],
-        appName = json['app_name'],
-        uuid = json['uuid'],
-        osVersion = json['os_version'],
-        manufacturer = json['manufacturer'],
-        brand = json['brand'],
-        model = json['model'],
-        isTablet = json['is_tablet'],
-        isMIUI = json['is_miui'],
-        isGMS = json['is_gms'],
-        isHMS = json['is_hms'];
+  PlatformToolsInfo.fromJson(this._json)
+      : appVersion = _json['app_version'],
+        appBundle = _json['app_bundle'],
+        appBuild = _json['app_build'],
+        appName = _json['app_name'],
+        uuid = _json['uuid'],
+        osVersion = _json['os_version'],
+        manufacturer = _json['manufacturer'],
+        brand = _json['brand'],
+        model = _json['model'],
+        isTablet = _json['is_tablet'],
+        isMIUI = _json['is_miui'],
+        isGMS = _json['is_gms'],
+        isHMS = _json['is_hms'];
+
+  final Map<String, dynamic> _json;
 
   final String appVersion;
   final String appBundle;
@@ -44,6 +48,8 @@ class PlatformToolsInfo {
   final bool isMIUI;
   final bool isGMS;
   final bool isHMS;
+
+  Map<String, dynamic> toJson() => _json;
 
   @override
   String toString() =>
