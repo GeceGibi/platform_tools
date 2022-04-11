@@ -35,7 +35,7 @@ class PlatformTools {
     _channel.invokeMethod('badge_update', value);
   }
 
-  Future<TrackingRequestReponse> requestTrackingAuthorization() async {
+  static Future<TrackingRequestReponse> requestTrackingAuthorization() async {
     try {
       //? notDetermined = 0
       //? restricted = 1
