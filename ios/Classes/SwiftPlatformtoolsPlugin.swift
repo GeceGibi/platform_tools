@@ -2,9 +2,9 @@ import Flutter
 import UIKit
 
 public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
-
+    
     private var isSupportedBadge = false;
-
+    
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "gecegibi/platform_tools", binaryMessenger: registrar.messenger())
         let instance = SwiftPlatformToolsPlugin()
@@ -17,13 +17,13 @@ public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
         switch call.method {
         case "app_settings": fallthrough
         case "app_notification_settings":
-            self?.openNotificationSettings()
+            openNotificationSettings()
             
         case "info":
-            self?.getInfo(result: result)
+            getInfo(result: result)
             
         case "badge_update":
-            self?.updateBadge(badge: call.arguments as! Int)
+            updateBadge(badge: call.arguments as! Int)
             
         default:
             result(FlutterMethodNotImplemented)
@@ -53,18 +53,19 @@ public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
         let model = unameMachine
         
         result([
-            "appVersion": appVersion!,
-            "appBuild": appBuild!,
-            "appName": appName!,
-            "appBundle": appBundle!,
-            "isTablet": isTablet,
+            "app_version": appVersion!,
+            "app_build": appBuild!,
+            "app_name": appName!,
+            "app_bundle": appBundle!,
+            "is_tablet": isTablet,
             "uuid": uuid!,
-            "systemVersion": systemVersion,
+            "os_version": systemVersion,
             "manufacturer": manufacturer,
-            "service": "google",
             "brand": brand,
             "model": model,
-            "isMIUI": false
+            "is_miui": false,
+            "is_gms": false,
+            "is_hms": false,
         ])
     }
     

@@ -12,6 +12,9 @@ import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
 import androidx.annotation.NonNull
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.huawei.hms.api.HuaweiApiAvailability
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -57,8 +60,8 @@ class PlatformToolsPlugin: FlutterPlugin, MethodCallHandler,ActivityAware {
     when (call.method) {
       "app_settings" -> openAppSettings()
       "app_notification_settings" -> openAppNotificationSettings()
-      "info" -> getInfo(result)
       "badge_update" -> updateBadge(call.arguments as Int)
+      "info" -> getInfo(result)
       else -> result.notImplemented()
     }
   }
@@ -105,23 +108,24 @@ class PlatformToolsPlugin: FlutterPlugin, MethodCallHandler,ActivityAware {
       var appName = appInfo.loadLabel(context.packageManager).toString()
 
       val info: MutableMap<String, Any> = hashMapOf(
-        "appVersion" to appVersion,
-        "appBuild" to appBuild,
-        "appName" to appName,
-        "appBundle" to context.packageName,
-        "isTablet" to isTablet(),
+        "app_version" to appVersion,
+        "app_build" to appBuild,
+        "app_name" to appName,
+        "app_bundle" to context.packageName,
+        "is_tablet" to isTablet(),
         "uuid" to uuid(),
-        "systemVersion" to Build.VERSION.SDK_INT.toString(),
-        "service" to getService(),
+        "os_version" to Build.VERSION.SDK_INT.toString(),
         "manufacturer" to Build.MANUFACTURER,
         "brand" to Build.BRAND,
         "model" to Build.MODEL,
-        "isMIUI" to !TextUtils.isEmpty(getSystemProperty("ro.miui.ui.version.name")),
+        "is_miui" to !TextUtils.isEmpty(getSystemProperty("ro.miui.ui.version.name")),
+        "is_gms" to isGMSAvailable(),
+        "is_hms" to isHMSAvailable(),
       )
 
       result.success(info);
     } catch (e: Exception) {
-      result.error("DEVICE_INFO", "CANNOT GET CONSTANTS", e)
+      result.error("DEVICE_INFO", "CANNOT GET INFO", e)
     }
   }
 
@@ -143,7 +147,7 @@ class PlatformToolsPlugin: FlutterPlugin, MethodCallHandler,ActivityAware {
         .putExtra(Settings.EXTRA_APP_PACKAGE, activity.packageName)
     } else {
       Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-        .setData(Uri.parse("package:${activity.packageName}"),)
+        .setData(Uri.parse("package:${activity.packageName}"))
     }
 
     activity.startActivity(intent);
@@ -172,17 +176,13 @@ class PlatformToolsPlugin: FlutterPlugin, MethodCallHandler,ActivityAware {
     return line
   }
 
-  private fun getService(): String {
-    return "google"
-    /*
-    val gmsResult = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context)
-    var hmsResult = HuaweiApiAvailability.getInstance().isHuaweiMobileServicesAvailable(context)
+  private fun isGMSAvailable():Boolean{
+    val result = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
+    return result == ConnectionResult.SUCCESS;
+  }
 
-    return when (ConnectionResult.SUCCESS) {
-        gmsResult -> "google"
-        hmsResult -> "huawei"
-        else -> "unknown"
-    }
-    */
+  private fun isHMSAvailable():Boolean{
+    val result = HuaweiApiAvailability.getInstance().isHuaweiMobileServicesAvailable(context);
+    return result == ConnectionResult.SUCCESS;
   }
 }

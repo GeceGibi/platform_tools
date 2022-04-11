@@ -9,6 +9,7 @@
 .history
 .svn/
 
+
 # IntelliJ related
 *.iml
 *.ipr
@@ -26,4 +27,6 @@
 **/doc/api/
 .dart_tool/
 .packages
+.gradle/
 build/
+lib/*.jar

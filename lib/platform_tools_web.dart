@@ -4,14 +4,14 @@ import 'dart:async';
 // package as the core of your plugin.
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html show window, Navigator;
-import 'dart:ui';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:platformtools/platform_tools_model.dart';
 
 /// A web implementation of the Platformtools plugin.
 class PlatformToolsPlugin {
-  PlatformToolsPlugin(this._navigator);
+  const PlatformToolsPlugin(this._navigator);
 
   final html.Navigator _navigator;
 
@@ -26,9 +26,6 @@ class PlatformToolsPlugin {
     channel.setMethodCallHandler(pluginInstance.handleMethodCall);
   }
 
-  /// Handles method calls over the MethodChannel of this plugin.
-  /// Note: Check the "federated" architecture for a new way of doing this:
-  /// https://flutter.dev/go/federated-plugins
   Future<dynamic> handleMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'badge_update':
@@ -49,20 +46,11 @@ class PlatformToolsPlugin {
     }
   }
 
-  Future<Map<String, dynamic>> getInfo() {
-    return Future.value({
-      'appVersion': 'UNKNOWN',
-      'appBuild': 'UNKNOWN',
-      'appName': 'UNKNOWN',
-      "appBundle": 'UNKNOWN',
-      "isTablet": false,
-      "uuid": 'UNKNOWN',
-      "systemVersion": _navigator.userAgent,
-      "manufacturer": _navigator.platform,
-      "service": "UNKNOWN",
-      "brand": 'UNKNOWN',
-      "model": 'UNKNOWN',
-      "isMIUI": false
-    });
+  Future<PlatformToolsInfo> getInfo() async {
+    return PlatformToolsInfo.fallback(
+      appVersion: _navigator.appVersion,
+      appBuild: _navigator.appCodeName,
+      appName: _navigator.appName,
+    );
   }
 }

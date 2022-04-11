@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/services.dart';
+import 'package:platformtools/platform_tools_model.dart';
 
 class PlatformTools {
   static const _channel = MethodChannel('gecegibi/platform_tools');
@@ -13,8 +13,13 @@ class PlatformTools {
     _channel.invokeMethod('app_notification_settings');
   }
 
-  static Future<Map<String, dynamic>> getDeviceInfo() async {
-    return await _channel.invokeMapMethod<String, dynamic>('info') ?? {};
+  static Future<PlatformToolsInfo> getDeviceInfo() async {
+    try {
+      final info = await _channel.invokeMapMethod('info');
+      return PlatformToolsInfo.fromJson(Map<String, dynamic>.from(info ?? {}));
+    } catch (e) {
+      return PlatformToolsInfo.fallback();
+    }
   }
 
   static void badgeUpdate(int value) {

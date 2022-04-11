@@ -1,4 +1,4 @@
-#import "PlatformtoolsPlugin.h"
+#import "PlatformToolsPlugin.h"
 #if __has_include(<platformtools/platformtools-Swift.h>)
 #import <platformtools/platformtools-Swift.h>
 #else

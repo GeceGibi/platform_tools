@@ -36,7 +36,7 @@ flutter:
         pluginClass: PlatformToolsPlugin
       web:
         pluginClass: PlatformToolsPlugin
-        fileName: platformtools_web.dart
+        fileName: platform_tools_web.dart
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
