@@ -1,4 +1,4 @@
-# platformtools
+# platform_tools
 
 A new flutter plugin project.
 
