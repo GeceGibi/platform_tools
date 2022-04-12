@@ -1,3 +1,4 @@
+import AppTrackingTransparency
 import Flutter
 import UIKit
 
