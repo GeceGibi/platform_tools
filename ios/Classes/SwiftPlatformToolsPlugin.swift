@@ -11,7 +11,31 @@ public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
         let instance = SwiftPlatformToolsPlugin()
         
         registrar.addMethodCallDelegate(instance, channel: channel)
+        registrar.addApplicationDelegate(instance)
     }
+
+    public func applicationDidBecomeActive(_ application: UIApplication) {
+        UNUserNotificationCenter.current().requestAuthorization(options: .badge)
+        { (granted, error) in
+            self.isSupportedBadge = error == nil
+        }
+    }
+    
+//    public func applicationWillTerminate(_ application: UIApplication) {
+//        debugPrint("applicationWillTerminate")
+//    }
+//
+//    public func applicationWillResignActive(_ application: UIApplication) {
+//        debugPrint("applicationWillResignActive")
+//    }
+//
+//    public func applicationDidEnterBackground(_ application: UIApplication) {
+//        debugPrint("applicationDidEnterBackground")
+//    }
+//
+//    public func applicationWillEnterForeground(_ application: UIApplication) {
+//        print("applicationWillEnterForeground")
+//    }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         
