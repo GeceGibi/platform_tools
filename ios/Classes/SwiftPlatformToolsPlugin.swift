@@ -77,13 +77,11 @@ public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
               result(Int(status.rawValue))
           })
       } else {
-          // return notSupported
           result(Int(4))
       }
     }
     
     private func getInfo(result: FlutterResult) {
-        
         // Proxy
         let info = Bundle.main.infoDictionary
         
@@ -109,9 +107,10 @@ public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
             "manufacturer": manufacturer,
             "brand": brand,
             "model": model,
+            "is_emulator": isEmulator,
             "is_miui": false,
             "is_gms": false,
-            "is_hms": false,
+            "is_hms": false
         ])
     }
     
@@ -130,5 +129,13 @@ public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
             }
         }
         return machine ?? "N/A"
+    }
+
+    var isEmulator: Bool {
+        #if IOS_SIMULATOR
+            return true
+        #else
+            return false
+        #endif
     }
 }

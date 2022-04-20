@@ -15,6 +15,7 @@ class PlatformToolsInfo {
     this.isMIUI = false,
     this.isGMS = false,
     this.isHMS = false,
+    this.isEmulator = false,
   }) : _json = const {};
 
   PlatformToolsInfo.fromJson(this._json)
@@ -30,7 +31,8 @@ class PlatformToolsInfo {
         isTablet = _json['is_tablet'],
         isMIUI = _json['is_miui'],
         isGMS = _json['is_gms'],
-        isHMS = _json['is_hms'];
+        isHMS = _json['is_hms'],
+        isEmulator = _json['is_emulator'];
 
   final Map<String, dynamic> _json;
 
@@ -44,6 +46,7 @@ class PlatformToolsInfo {
   final String manufacturer;
   final String brand;
   final String model;
+  final bool isEmulator;
   final bool isTablet;
   final bool isMIUI;
   final bool isGMS;

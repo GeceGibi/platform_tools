@@ -2,6 +2,7 @@ package com.gecegibi.platformtools
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
@@ -9,6 +10,8 @@ import android.content.pm.PackageInfo
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
+import android.os.StatFs
 import android.provider.Settings
 import android.text.TextUtils
 import androidx.annotation.NonNull
@@ -63,6 +66,10 @@ class PlatformToolsPlugin: FlutterPlugin, MethodCallHandler,ActivityAware {
       "app_notification_settings" -> openAppNotificationSettings()
       "badge_update" -> updateBadge(call.arguments as Int)
       "info" -> getInfo(result)
+      "get_free_disk_space" -> getFreeDiskSpace(result)
+      "get_total_disk_space" -> getTotalDiskSpace(result)
+      "get_free_disk_space_for_path" -> getFreeDiskSpaceForPath(call.argument<String>("path")!!, result)
+      "get_ram_info" -> getRamInfo(result)
       else -> result.notImplemented()
     }
   }
@@ -122,6 +129,7 @@ class PlatformToolsPlugin: FlutterPlugin, MethodCallHandler,ActivityAware {
         "is_miui" to !TextUtils.isEmpty(getSystemProperty("ro.miui.ui.version.name")),
         "is_gms" to isGMSAvailable(),
         "is_hms" to isHMSAvailable(),
+        "is_emulator" to isEmulator(),
       )
 
       result.success(info);
@@ -131,15 +139,33 @@ class PlatformToolsPlugin: FlutterPlugin, MethodCallHandler,ActivityAware {
   }
 
   @SuppressLint("HardwareIds")
-  fun uuid(): String {
+  private fun uuid(): String {
     return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+  }
+
+  private fun isEmulator(): Boolean {
+    return (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
+            || Build.FINGERPRINT.startsWith("generic")
+            || Build.FINGERPRINT.startsWith("unknown")
+            || Build.HARDWARE.contains("goldfish")
+            || Build.HARDWARE.contains("ranchu")
+            || Build.MODEL.contains("google_sdk")
+            || Build.MODEL.contains("Emulator")
+            || Build.MODEL.contains("Android SDK built for x86")
+            || Build.MANUFACTURER.contains("Genymotion")
+            || Build.PRODUCT.contains("sdk_google")
+            || Build.PRODUCT.contains("google_sdk")
+            || Build.PRODUCT.contains("sdk")
+            || Build.PRODUCT.contains("sdk_x86")
+            || Build.PRODUCT.contains("vbox86p")
+            || Build.PRODUCT.contains("emulator")
+            || Build.PRODUCT.contains("simulator");
   }
 
   private fun openAppSettings() {
     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
     intent.data = Uri.fromParts("package", activity.packageName, null)
     activity.startActivity(intent)
-
   }
 
   private fun openAppNotificationSettings() {

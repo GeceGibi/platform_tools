@@ -42,20 +42,15 @@ class PlatformTools {
       //? denied = 2
       //? authorized = 3
       //? notSupported = 4
-
       switch (await _channel.invokeMethod('request_tracking_authorization')) {
         case 1:
           return TrackingRequestReponse.restricted;
-
         case 2:
           return TrackingRequestReponse.denied;
-
         case 3:
           return TrackingRequestReponse.authorized;
-
         case 4:
           return TrackingRequestReponse.notSupported;
-
         case 0:
         default:
           return TrackingRequestReponse.notDetermined;
