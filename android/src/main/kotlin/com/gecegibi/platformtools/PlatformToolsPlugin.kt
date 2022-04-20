@@ -66,10 +66,6 @@ class PlatformToolsPlugin: FlutterPlugin, MethodCallHandler,ActivityAware {
       "app_notification_settings" -> openAppNotificationSettings()
       "badge_update" -> updateBadge(call.arguments as Int)
       "info" -> getInfo(result)
-      "get_free_disk_space" -> getFreeDiskSpace(result)
-      "get_total_disk_space" -> getTotalDiskSpace(result)
-      "get_free_disk_space_for_path" -> getFreeDiskSpaceForPath(call.argument<String>("path")!!, result)
-      "get_ram_info" -> getRamInfo(result)
       else -> result.notImplemented()
     }
   }
