@@ -24,15 +24,15 @@ public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
 //    public func applicationWillTerminate(_ application: UIApplication) {
 //        debugPrint("applicationWillTerminate")
 //    }
-//
+
 //    public func applicationWillResignActive(_ application: UIApplication) {
 //        debugPrint("applicationWillResignActive")
 //    }
-//
+
 //    public func applicationDidEnterBackground(_ application: UIApplication) {
 //        debugPrint("applicationDidEnterBackground")
 //    }
-//
+
 //    public func applicationWillEnterForeground(_ application: UIApplication) {
 //        print("applicationWillEnterForeground")
 //    }

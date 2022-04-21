@@ -1,7 +1,7 @@
 part of 'platform_tools.dart';
 
-class PlatformToolsInfo {
-  PlatformToolsInfo.fallback({
+class DeviceInfo {
+  DeviceInfo.fallback({
     this.appVersion = '-',
     this.appBuild = '-',
     this.appName = '-',
@@ -18,7 +18,7 @@ class PlatformToolsInfo {
     this.isEmulator = false,
   }) : _json = const {};
 
-  PlatformToolsInfo.fromJson(this._json)
+  DeviceInfo.fromJson(this._json)
       : appVersion = _json['app_version'],
         appBundle = _json['app_bundle'],
         appBuild = _json['app_build'],
@@ -41,11 +41,12 @@ class PlatformToolsInfo {
   final String appBuild;
   final String appName;
 
-  final String uuid;
-  final String osVersion;
   final String manufacturer;
+  final String osVersion;
   final String brand;
   final String model;
+  final String uuid;
+
   final bool isEmulator;
   final bool isTablet;
   final bool isMIUI;
@@ -56,5 +57,5 @@ class PlatformToolsInfo {
 
   @override
   String toString() =>
-      'PlatformToolsInfo(appVersion:$appVersion, appBundle:$appBundle, appBuild:$appBuild, appName:$appName, uuid:$uuid, osVersion:$osVersion, manufacturer:$manufacturer, brand:$brand, model:$model, isTablet:$isTablet, isMIUI:$isMIUI, isGMS:$isGMS, isHMS:$isHMS)';
+      'DeviceInfo(appVersion:$appVersion, appBundle:$appBundle, appBuild:$appBuild, appName:$appName, uuid:$uuid, osVersion:$osVersion, manufacturer:$manufacturer, brand:$brand, model:$model, isTablet:$isTablet, isMIUI:$isMIUI, isGMS:$isGMS, isHMS:$isHMS, isEmulator:$isEmulator)';
 }

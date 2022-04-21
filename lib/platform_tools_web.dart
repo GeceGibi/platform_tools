@@ -3,7 +3,7 @@ import 'dart:html' as html;
 
 import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:platform_tools/platform_tools.dart' show PlatformToolsInfo;
+import 'package:platform_tools/platform_tools.dart' show DeviceInfo;
 
 /// A web implementation of the Platformtools plugin.
 class PlatformToolsPlugin {
@@ -45,8 +45,8 @@ class PlatformToolsPlugin {
     }
   }
 
-  Future<PlatformToolsInfo> getInfo() async {
-    return PlatformToolsInfo.fallback(
+  Future<DeviceInfo> getInfo() async {
+    return DeviceInfo.fallback(
       appVersion: _navigator.appVersion,
       appBuild: _navigator.appCodeName,
       appName: _navigator.appName,

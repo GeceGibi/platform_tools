@@ -22,12 +22,12 @@ class PlatformTools {
     _channel.invokeMethod('app_notification_settings');
   }
 
-  static Future<PlatformToolsInfo> getDeviceInfo() async {
+  static Future<DeviceInfo> getDeviceInfo() async {
     try {
       final info = await _channel.invokeMapMethod('info');
-      return PlatformToolsInfo.fromJson(Map<String, dynamic>.from(info ?? {}));
+      return DeviceInfo.fromJson(Map<String, dynamic>.from(info ?? {}));
     } catch (e) {
-      return PlatformToolsInfo.fallback();
+      return DeviceInfo.fallback();
     }
   }
 
@@ -51,6 +51,7 @@ class PlatformTools {
           return TrackingRequestReponse.authorized;
         case 4:
           return TrackingRequestReponse.notSupported;
+
         case 0:
         default:
           return TrackingRequestReponse.notDetermined;
