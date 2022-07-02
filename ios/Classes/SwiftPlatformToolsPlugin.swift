@@ -13,7 +13,7 @@ public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
         registrar.addMethodCallDelegate(instance, channel: channel)
         registrar.addApplicationDelegate(instance)
     }
-
+    
     public func applicationDidBecomeActive(_ application: UIApplication) {
         UNUserNotificationCenter.current().requestAuthorization(options: .badge)
         { (granted, error) in
@@ -21,21 +21,21 @@ public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
         }
     }
     
-//    public func applicationWillTerminate(_ application: UIApplication) {
-//        debugPrint("applicationWillTerminate")
-//    }
-
-//    public func applicationWillResignActive(_ application: UIApplication) {
-//        debugPrint("applicationWillResignActive")
-//    }
-
-//    public func applicationDidEnterBackground(_ application: UIApplication) {
-//        debugPrint("applicationDidEnterBackground")
-//    }
-
-//    public func applicationWillEnterForeground(_ application: UIApplication) {
-//        print("applicationWillEnterForeground")
-//    }
+    //    public func applicationWillTerminate(_ application: UIApplication) {
+    //        debugPrint("applicationWillTerminate")
+    //    }
+    
+    //    public func applicationWillResignActive(_ application: UIApplication) {
+    //        debugPrint("applicationWillResignActive")
+    //    }
+    
+    //    public func applicationDidEnterBackground(_ application: UIApplication) {
+    //        debugPrint("applicationDidEnterBackground")
+    //    }
+    
+    //    public func applicationWillEnterForeground(_ application: UIApplication) {
+    //        print("applicationWillEnterForeground")
+    //    }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         
@@ -52,7 +52,7 @@ public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
             
         case "request_tracking_authorization":
             requestTrackingAuthorization(result: result)
-
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -63,22 +63,25 @@ public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
             UIApplication.shared.applicationIconBadgeNumber = badge
         }
     }
-
+    
     /*
-    case notDetermined = 0
-    case restricted = 1
-    case denied = 2
-    case authorized = 3
-    case notSupported = 4
-    */
+     case notDetermined = 0
+     case restricted = 1
+     case denied = 2
+     case authorized = 3
+     case notSupported = 4
+     */
     private func requestTrackingAuthorization(result: @escaping FlutterResult) {
-      if #available(iOS 14, *) {
-          ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
-              result(Int(status.rawValue))
-          })
-      } else {
-          result(Int(4))
-      }
+        if #available(iOS 14, *) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
+                    result(Int(status.rawValue))
+                })
+            }
+            
+        } else {
+            result(Int(4))
+        }
     }
     
     private func getInfo(result: FlutterResult) {
@@ -130,12 +133,12 @@ public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
         }
         return machine ?? "N/A"
     }
-
+    
     var isEmulator: Bool {
-        #if IOS_SIMULATOR
-            return true
-        #else
-            return false
-        #endif
+#if IOS_SIMULATOR
+        return true
+#else
+        return false
+#endif
     }
 }
