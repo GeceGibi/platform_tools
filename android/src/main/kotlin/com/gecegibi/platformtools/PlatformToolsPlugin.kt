@@ -2,7 +2,6 @@ package com.gecegibi.platformtools
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
@@ -10,31 +9,29 @@ import android.content.pm.PackageInfo
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
-import android.os.Environment
-import android.os.StatFs
 import android.provider.Settings
 import android.text.TextUtils
 import androidx.annotation.NonNull
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.huawei.hms.api.HuaweiApiAvailability
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import io.flutter.embedding.engine.plugins.activity.ActivityAware
-import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import me.leolin.shortcutbadger.ShortcutBadger
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import java.lang.reflect.Method
 
 /** PlatforToolsPlugin */
-class PlatformToolsPlugin: FlutterPlugin, MethodCallHandler,ActivityAware {
+class PlatformToolsPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   private lateinit var context: Context
   private lateinit var activity: Activity
-  private lateinit var channel : MethodChannel
+  private lateinit var channel: MethodChannel
   private var isBadgeSupported = false;
 
   override fun onDetachedFromActivity() {
@@ -141,21 +138,21 @@ class PlatformToolsPlugin: FlutterPlugin, MethodCallHandler,ActivityAware {
 
   private fun isEmulator(): Boolean {
     return (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
-            || Build.FINGERPRINT.startsWith("generic")
-            || Build.FINGERPRINT.startsWith("unknown")
-            || Build.HARDWARE.contains("goldfish")
-            || Build.HARDWARE.contains("ranchu")
-            || Build.MODEL.contains("google_sdk")
-            || Build.MODEL.contains("Emulator")
-            || Build.MODEL.contains("Android SDK built for x86")
-            || Build.MANUFACTURER.contains("Genymotion")
-            || Build.PRODUCT.contains("sdk_google")
-            || Build.PRODUCT.contains("google_sdk")
-            || Build.PRODUCT.contains("sdk")
-            || Build.PRODUCT.contains("sdk_x86")
-            || Build.PRODUCT.contains("vbox86p")
-            || Build.PRODUCT.contains("emulator")
-            || Build.PRODUCT.contains("simulator");
+      || Build.FINGERPRINT.startsWith("generic")
+      || Build.FINGERPRINT.startsWith("unknown")
+      || Build.HARDWARE.contains("goldfish")
+      || Build.HARDWARE.contains("ranchu")
+      || Build.MODEL.contains("google_sdk")
+      || Build.MODEL.contains("Emulator")
+      || Build.MODEL.contains("Android SDK built for x86")
+      || Build.MANUFACTURER.contains("Genymotion")
+      || Build.PRODUCT.contains("sdk_google")
+      || Build.PRODUCT.contains("google_sdk")
+      || Build.PRODUCT.contains("sdk")
+      || Build.PRODUCT.contains("sdk_x86")
+      || Build.PRODUCT.contains("vbox86p")
+      || Build.PRODUCT.contains("emulator")
+      || Build.PRODUCT.contains("simulator");
   }
 
   private fun openAppSettings() {
@@ -199,13 +196,25 @@ class PlatformToolsPlugin: FlutterPlugin, MethodCallHandler,ActivityAware {
     return line
   }
 
-  private fun isGMSAvailable():Boolean{
+  private fun isGMSAvailable(): Boolean {
     val result = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
     return result == ConnectionResult.SUCCESS;
   }
 
-  private fun isHMSAvailable():Boolean{
-    val result = HuaweiApiAvailability.getInstance().isHuaweiMobileServicesAvailable(context);
-    return result == ConnectionResult.SUCCESS;
+  private fun isHMSAvailable(): Boolean {
+    return try {
+      val huaweiApiAvailability = Class.forName("com.huawei.hms.api.HuaweiApiAvailability")
+      val getInstanceMethod: Method = huaweiApiAvailability.getMethod("getInstance")
+      val hmsObject: Any = getInstanceMethod.invoke(null)
+      val isHuaweiMobileServicesAvailableMethod: Method = hmsObject.javaClass.getMethod(
+        "isHuaweiMobileServicesAvailable",
+        Context::class.java
+      )
+
+      // if response 0 -> ConnectionResult.SUCCESS
+      return isHuaweiMobileServicesAvailableMethod.invoke(hmsObject, context) as Int == 0
+    } catch (e: java.lang.Exception) {
+      false
+    }
   }
 }
