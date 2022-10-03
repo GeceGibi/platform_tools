@@ -12,8 +12,6 @@ import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
 import androidx.annotation.NonNull
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -197,8 +195,21 @@ class PlatformToolsPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   }
 
   private fun isGMSAvailable(): Boolean {
-    val result = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
-    return result == ConnectionResult.SUCCESS;
+    return try {
+      val googleApiAvailability: java.lang.Class<*> =
+        java.lang.Class.forName("com.google.android.gms.common.GoogleApiAvailability")
+      val getInstanceMethod: Method = googleApiAvailability.getMethod("getInstance")
+      val gmsObject: Any = getInstanceMethod.invoke(null)
+      val isGooglePlayServicesAvailableMethod: Method = gmsObject.javaClass.getMethod(
+        "isGooglePlayServicesAvailable",
+        Context::class.java
+      )
+
+      // if response 0 -> ConnectionResult.SUCCESS
+      return isGooglePlayServicesAvailableMethod.invoke(gmsObject, context) as Int == 0
+    } catch (e: java.lang.Exception) {
+      false
+    }
   }
 
   private fun isHMSAvailable(): Boolean {
