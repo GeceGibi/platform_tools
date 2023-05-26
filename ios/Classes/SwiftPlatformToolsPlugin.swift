@@ -95,7 +95,7 @@ public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
         let isTablet = UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad
         let uuid = UIDevice.current.identifierForVendor?.uuidString
         let systemVersion = UIDevice.current.systemVersion
-        let manufacturer = "apple"
+        let manufacturer = "Apple"
         let brand = isTablet ? "iPad" : "iPhone"
         let model = unameMachine
         
@@ -113,9 +113,32 @@ public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
             "is_emulator": isEmulator,
             "is_miui": false,
             "is_gms": false,
-            "is_hms": false
+            "is_hms": false,
+            "memory_total": ProcessInfo.processInfo.physicalMemory,
+            "storage_total": totalDiskSpaceInBytes,
+            "storage_free" : freeDiskSpaceInBytes,
         ])
     }
+    
+    var totalDiskSpaceInBytes:Int64 {
+         guard let systemAttributes = try? FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory() as String),
+             let space = (systemAttributes[FileAttributeKey.systemSize] as? NSNumber)?.int64Value else { return 0 }
+         return space
+     }
+    
+    var freeDiskSpaceInBytes:Int64 {
+        get {
+            do {
+                let systemAttributes = try FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory() as String)
+                let freeSpace = (systemAttributes[FileAttributeKey.systemFreeSize] as? NSNumber)?.int64Value
+                return freeSpace!
+            } catch {
+                return 0
+            }
+        }
+    }
+
+     
     
     private func openNotificationSettings(){
         if let url = URL(string: UIApplication.openSettingsURLString) {
@@ -135,10 +158,10 @@ public class SwiftPlatformToolsPlugin: NSObject, FlutterPlugin {
     }
     
     var isEmulator: Bool {
-#if IOS_SIMULATOR
-        return true
-#else
-        return false
-#endif
+        #if TARGET_OS_SIMULATOR
+            return false
+        #else
+            return true
+        #endif
     }
 }

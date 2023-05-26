@@ -25,6 +25,7 @@ class PlatformTools {
   static Future<DeviceInfo> getDeviceInfo() async {
     try {
       final info = await _channel.invokeMapMethod('info');
+
       return DeviceInfo.fromJson(Map<String, dynamic>.from(info ?? {}));
     } catch (e) {
       return DeviceInfo.fallback();
